@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
@@ -31,17 +32,27 @@ public class Main {
                 // Determine the response based on the path
                 StatusLine statusLine;
 
-                if (path.equals("/")) {
+                String[] pathContentList = path.split("/");
+
+                ResponseHeaders responseHeaders = new ResponseHeaders();
+                ResponseBody responseBody = new ResponseBody(""); // Corps vide
+
+                if (pathContentList.length > 0){
                     statusLine = new StatusLine("HTTP/1.1", 200, "OK");
-                } else {
+                    for (int i = 0; i < pathContentList.length; i++){
+                        if (pathContentList[i].equals("echo")){
+                            responseBody = new ResponseBody(pathContentList[i + 1]); // Corps vide
+                            responseHeaders = new ResponseHeaders(new ResponseContentType("text/plain"), new ResponseContentLength(pathContentList[i + 1].getBytes().length));
+                            break;
+                        }
+                    }
+                }
+                else {
                     statusLine = new StatusLine("HTTP/1.1", 404, "Not Found");
                 }
 
                 // Créer la réponse HTTP
-                Header header = new Header();
-                ResponseBody responseBody = new ResponseBody(""); // Corps vide
-
-                HttpResponse httpResponse = new HttpResponse(statusLine, header, responseBody);
+                HttpResponse httpResponse = new HttpResponse(statusLine, responseHeaders, responseBody);
 
                 // Envoyer la réponse au client
                 OutputStream outputStream = clientSocket.getOutputStream();

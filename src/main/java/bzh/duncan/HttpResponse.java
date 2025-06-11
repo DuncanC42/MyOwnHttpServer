@@ -2,10 +2,10 @@ package bzh.duncan;
 
 public class HttpResponse {
     private StatusLine statusLine;
-    private Header header;
+    private ResponseHeaders header;
     private ResponseBody responseBody;
 
-    public HttpResponse(StatusLine statusLine, Header header, ResponseBody responseBody) {
+    public HttpResponse(StatusLine statusLine, ResponseHeaders header, ResponseBody responseBody) {
         this.statusLine = statusLine;
         this.header = header;
         this.responseBody = responseBody;
@@ -19,11 +19,11 @@ public class HttpResponse {
         this.statusLine = statusLine;
     }
 
-    public Header getHeader() {
+    public ResponseHeaders getHeader() {
         return header;
     }
 
-    public void setHeader(Header header) {
+    public void setHeader(ResponseHeaders header) {
         this.header = header;
     }
 
