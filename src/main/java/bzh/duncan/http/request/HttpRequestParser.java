@@ -1,4 +1,4 @@
-package bzh.duncan;
+package bzh.duncan.http.request;
 
 import java.io.BufferedReader;
 import java.io.IOException;

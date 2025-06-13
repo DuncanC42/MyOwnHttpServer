@@ -1,4 +1,4 @@
-package bzh.duncan;
+package bzh.duncan.http.response;
 
 public class StatusLine {
     private String httpVersion = "HTTP/1.1"; // Valeur par défaut : HTTP/1.1

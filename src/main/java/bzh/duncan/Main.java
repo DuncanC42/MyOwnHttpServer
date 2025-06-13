@@ -1,5 +1,7 @@
 package bzh.duncan;
 
+import bzh.duncan.server.RequestHandler;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;

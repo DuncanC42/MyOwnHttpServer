@@ -1,4 +1,4 @@
-package bzh.duncan;
+package bzh.duncan.http;
 
 public enum HttpMethodEnum {
     GET("GET"),

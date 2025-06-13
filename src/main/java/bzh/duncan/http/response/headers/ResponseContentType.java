@@ -1,4 +1,6 @@
-package bzh.duncan;
+package bzh.duncan.http.response.headers;
+
+import bzh.duncan.Constants;
 
 public class ResponseContentType {
     private String contentType;

@@ -1,4 +1,6 @@
-package bzh.duncan;
+package bzh.duncan.http.request.headers;
+
+import bzh.duncan.Constants;
 
 public class Header {
     private Host serversHost = new Host("localHost", 4221);

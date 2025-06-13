@@ -1,4 +1,4 @@
-package bzh.duncan;
+package bzh.duncan.http.response;
 
 public class ResponseBody {
     private String bodyContent = "";

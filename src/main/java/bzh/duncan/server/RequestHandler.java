@@ -1,4 +1,9 @@
-package bzh.duncan;
+package bzh.duncan.server;
+
+import bzh.duncan.http.request.HttpRequest;
+import bzh.duncan.http.request.HttpRequestParser;
+import bzh.duncan.http.response.HttpResponse;
+import bzh.duncan.routing.RouteHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;

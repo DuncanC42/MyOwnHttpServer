@@ -1,4 +1,6 @@
-package bzh.duncan;
+package bzh.duncan.http.request;
+
+import bzh.duncan.http.HttpMethodEnum;
 
 public class RequestLine {
     private HttpMethodEnum httpMethod = HttpMethodEnum.GET; // "GET"

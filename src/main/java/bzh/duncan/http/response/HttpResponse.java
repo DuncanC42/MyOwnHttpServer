@@ -1,4 +1,6 @@
-package bzh.duncan;
+package bzh.duncan.http.response;
+
+import bzh.duncan.http.response.headers.ResponseHeaders;
 
 public class HttpResponse {
     private StatusLine statusLine;
