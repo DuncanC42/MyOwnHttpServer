@@ -1,57 +1,61 @@
 package bzh.duncan;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 
 public class Main {
+    private static final int THREAD_POOL_SIZE = 50; // Augmenté pour gérer plus de connexions simultanées
+    private static final int SERVER_PORT = 4221;
+    private static final int SOCKET_BACKLOG = 100; // Taille de la queue des connexions en attente
+
     public static void main(String[] args) {
-        System.out.println("Logs from your program will appear here!");
+        System.out.println("Starting HTTP server on port " + SERVER_PORT);
+
+        // Créer un pool de threads avec gestion des rejets
+        ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
         try {
-            ServerSocket serverSocket = new ServerSocket(4221);
+            ServerSocket serverSocket = new ServerSocket(SERVER_PORT, SOCKET_BACKLOG);
             serverSocket.setReuseAddress(true);
-            RouteHandler routeHandler = new RouteHandler();
+
+            // Optimisations pour les performances
+            serverSocket.setPerformancePreferences(0, 1, 2); // Latence > Bande passante > Temps de connexion
+
+            System.out.println("Server started successfully with " + THREAD_POOL_SIZE + " threads");
+            System.out.println("Socket backlog: " + SOCKET_BACKLOG);
+
+            // Compteur de connexions pour monitoring
+            int connectionCount = 0;
 
             while (true) {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Accepted new connection");
-
                 try {
-                    // Parse the HTTP request
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                    HttpRequest httpRequest = HttpRequestParser.parseRequest(reader);
+                    Socket clientSocket = serverSocket.accept();
+                    connectionCount++;
+                    System.out.println("Connection #" + connectionCount + " accepted from " +
+                            clientSocket.getRemoteSocketAddress());
 
-                    System.out.println("Parsed request: " + httpRequest);
+                    // Soumettre la tâche au pool de threads avec gestion d'erreur
+                    RequestHandler handler = new RequestHandler(clientSocket);
+                    threadPool.submit(handler);
 
-                    // Handle the request
-                    HttpResponse httpResponse = routeHandler.handleRequest(httpRequest);
-
-                    // Send the response
-                    OutputStream outputStream = clientSocket.getOutputStream();
-                    outputStream.write(httpResponse.toString().getBytes());
-                    outputStream.flush();
-
+                } catch (RejectedExecutionException e) {
+                    System.out.println("Thread pool full, rejecting connection: " + e.getMessage());
+                    // Optionnel : fermer la socket si le pool est plein
                 } catch (IOException e) {
-                    System.out.println("Error processing request: " + e.getMessage());
-                    // Send a 500 error response
-                    try {
-                        OutputStream outputStream = clientSocket.getOutputStream();
-                        String errorResponse = "HTTP/1.1 500 Internal Server Error\r\n\r\n";
-                        outputStream.write(errorResponse.getBytes());
-                        outputStream.flush();
-                    } catch (IOException ex) {
-                        System.out.println("Error sending error response: " + ex.getMessage());
-                    }
-                } finally {
-                    clientSocket.close();
+                    System.out.println("Error accepting connection: " + e.getMessage());
                 }
             }
         } catch (IOException e) {
-            System.out.println("IOException: " + e.getMessage());
+            System.out.println("Failed to start server: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            // Arrêter proprement le pool de threads
+            System.out.println("Shutting down server...");
+            threadPool.shutdown();
         }
     }
 }
