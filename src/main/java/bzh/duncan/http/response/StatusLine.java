@@ -9,6 +9,14 @@ public class StatusLine {
     public StatusLine() {
     }
 
+    /**
+     * Parameterized constructor.
+     * Allows customization of the HTTP version, status code, and reason phrase.
+     *
+     * @param httpVersion  The HTTP version (e.g., HTTP/1.1).
+     * @param statusCode   The status code (e.g., 200).
+     * @param reasonPhrase The reason phrase (e.g., OK).
+     */
     public StatusLine(String httpVersion, int statusCode, String reasonPhrase) {
         this.httpVersion = httpVersion;
         this.statusCode = statusCode;

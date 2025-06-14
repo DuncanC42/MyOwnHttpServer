@@ -1,11 +1,12 @@
 package bzh.duncan.http.response.headers;
 
 import bzh.duncan.Constants;
+import org.apache.commons.lang3.StringUtils;
 
 public class ResponseHeaders {
     private ResponseContentType contentType;
     private ResponseContentLength contentLength;
-    private final String CRLF = Constants.CRLF;
+    private static final String CRLF = Constants.CRLF;
 
     public ResponseHeaders() {
     }
@@ -34,9 +35,13 @@ public class ResponseHeaders {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer();
-        sb.append("Content-Type: ").append(contentType);
-        sb.append("Content-Length: ").append(contentLength);
-        sb.append(Constants.CRLF);
+        if (contentType != null && StringUtils.isNotEmpty(contentType.getContentType())) {
+            sb.append("Content-Type: ").append(contentType.toString());
+        }
+        if (contentLength != null && StringUtils.isNotEmpty(contentLength.toString())) {
+            sb.append("Content-Length: ").append(contentLength.toString());
+        }
+        sb.append(CRLF);
         return sb.toString();
     }
 }

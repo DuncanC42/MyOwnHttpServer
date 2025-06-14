@@ -5,6 +5,9 @@ import java.io.IOException;
 
 public class HttpRequestParser {
 
+    private HttpRequestParser() {
+    }
+
     public static HttpRequest parseRequest(BufferedReader reader) throws IOException {
         HttpRequest request = new HttpRequest();
 

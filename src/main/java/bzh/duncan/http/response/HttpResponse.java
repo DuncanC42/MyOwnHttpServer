@@ -13,6 +13,11 @@ public class HttpResponse {
         this.responseBody = responseBody;
     }
 
+    public HttpResponse(StatusLine statusLine, ResponseHeaders header) {
+        this.statusLine = statusLine;
+        this.header = header;
+    }
+
     public StatusLine getStatusLine() {
         return statusLine;
     }
@@ -41,13 +46,10 @@ public class HttpResponse {
     public String toString() {
         StringBuilder response = new StringBuilder();
 
-        // Status line
         response.append(statusLine.toString());
 
-        // Headers (pour l'instant, juste un CRLF pour marquer la fin des headers)
         response.append(header.toString());
 
-        // Response body (optionnel)
         if (responseBody != null && !responseBody.getBodyContent().isEmpty()) {
             response.append(responseBody.getBodyContent());
         }

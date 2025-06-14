@@ -3,18 +3,18 @@ package bzh.duncan.http.response.headers;
 import bzh.duncan.Constants;
 
 public class ResponseContentLength {
-    private int responseBodyLength;
+    private Long responseBodyLength;
     private final String CRLF = Constants.CRLF;
 
-    public ResponseContentLength(int responseBodyLength) {
+    public ResponseContentLength(Long responseBodyLength) {
         this.responseBodyLength = responseBodyLength;
     }
 
-    public int getResponseBodyLength() {
+    public Long getResponseBodyLength() {
         return responseBodyLength;
     }
 
-    public void setResponseBodyLength(int responseBodyLength) {
+    public void setResponseBodyLength(Long responseBodyLength) {
         this.responseBodyLength = responseBodyLength;
     }
 

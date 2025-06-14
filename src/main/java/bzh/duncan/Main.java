@@ -46,7 +46,6 @@ public class Main {
 
                 } catch (RejectedExecutionException e) {
                     System.out.println("Thread pool full, rejecting connection: " + e.getMessage());
-                    // Optionnel : fermer la socket si le pool est plein
                 } catch (IOException e) {
                     System.out.println("Error accepting connection: " + e.getMessage());
                 }

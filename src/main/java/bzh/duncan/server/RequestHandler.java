@@ -28,16 +28,13 @@ public class RequestHandler implements Runnable {
         RouteHandler routeHandler = new RouteHandler();
 
         try {
-            // Parse the HTTP request
             BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             HttpRequest httpRequest = HttpRequestParser.parseRequest(reader);
 
             System.out.println("Parsed request: " + httpRequest);
 
-            // Handle the request
             HttpResponse httpResponse = routeHandler.handleRequest(httpRequest);
 
-            // Send the response
             OutputStream outputStream = clientSocket.getOutputStream();
             outputStream.write(httpResponse.toString().getBytes());
             outputStream.flush();
