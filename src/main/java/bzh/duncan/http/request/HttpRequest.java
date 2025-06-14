@@ -1,10 +1,12 @@
 package bzh.duncan.http.request;
 
+import bzh.duncan.http.HttpMethodEnum;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
-    private String method;
+    private HttpMethodEnum method;
     private String path;
     private String httpVersion;
     private Map<String, String> headers;
@@ -14,7 +16,7 @@ public class HttpRequest {
         this.headers = new HashMap<>();
     }
 
-    public HttpRequest(String method, String path, String httpVersion) {
+    public HttpRequest(HttpMethodEnum method, String path, String httpVersion) {
         this();
         this.method = method;
         this.path = path;
@@ -22,11 +24,11 @@ public class HttpRequest {
     }
 
     // Getters and setters
-    public String getMethod() {
+    public HttpMethodEnum getMethod() {
         return method;
     }
 
-    public void setMethod(String method) {
+    public void setMethod(HttpMethodEnum method) {
         this.method = method;
     }
 

@@ -1,5 +1,7 @@
 package bzh.duncan.http.request;
 
+import bzh.duncan.http.HttpMethodEnum;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 
@@ -32,7 +34,7 @@ public class HttpRequestParser {
     private static void parseRequestLine(HttpRequest request, String requestLine) {
         String[] parts = requestLine.split(" ");
         if (parts.length >= 3) {
-            request.setMethod(parts[0]);
+            request.setMethod(HttpMethodEnum.valueOf(parts[0]));
             request.setPath(parts[1]);
             request.setHttpVersion(parts[2]);
         }

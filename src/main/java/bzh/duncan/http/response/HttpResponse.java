@@ -1,6 +1,7 @@
 package bzh.duncan.http.response;
 
 import bzh.duncan.http.response.headers.ResponseHeaders;
+import org.apache.commons.lang3.StringUtils;
 
 public class HttpResponse {
     private StatusLine statusLine;
@@ -16,6 +17,10 @@ public class HttpResponse {
     public HttpResponse(StatusLine statusLine, ResponseHeaders header) {
         this.statusLine = statusLine;
         this.header = header;
+    }
+
+    public HttpResponse(StatusLine statusLine) {
+        this.statusLine = statusLine;
     }
 
     public StatusLine getStatusLine() {
@@ -48,7 +53,9 @@ public class HttpResponse {
 
         response.append(statusLine.toString());
 
-        response.append(header.toString());
+        if (header != null && StringUtils.isNotEmpty(header.toString())){
+            response.append(header.toString());
+        }
 
         if (responseBody != null && !responseBody.getBodyContent().isEmpty()) {
             response.append(responseBody.getBodyContent());
