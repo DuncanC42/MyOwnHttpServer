@@ -4,6 +4,7 @@ import bzh.duncan.http.HttpMethodEnum;
 import bzh.duncan.http.request.HttpRequest;
 import bzh.duncan.http.response.HttpResponse;
 import bzh.duncan.http.response.StatusLine;
+import bzh.duncan.http.response.headers.ResponseContentEncoding;
 import bzh.duncan.http.response.headers.ResponseContentLength;
 import bzh.duncan.http.response.headers.ResponseContentType;
 import bzh.duncan.http.response.headers.ResponseHeaders;
@@ -54,7 +55,8 @@ public class RouteHandler {
         StatusLine statusLine = new StatusLine("HTTP/1.1", 404, "Not Found");
         ResponseHeaders responseHeaders = new ResponseHeaders(
                 new ResponseContentType("text/plain"),
-                new ResponseContentLength(0L)
+                new ResponseContentLength(0L),
+                new ResponseContentEncoding("gzip")
         );
         return new HttpResponse(statusLine, responseHeaders);
     }

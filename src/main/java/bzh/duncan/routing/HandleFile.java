@@ -1,9 +1,11 @@
 package bzh.duncan.routing;
 
+import bzh.duncan.Constants;
 import bzh.duncan.http.request.HttpRequest;
 import bzh.duncan.http.response.HttpResponse;
 import bzh.duncan.http.response.ResponseBody;
 import bzh.duncan.http.response.StatusLine;
+import bzh.duncan.http.response.headers.ResponseContentEncoding;
 import bzh.duncan.http.response.headers.ResponseContentLength;
 import bzh.duncan.http.response.headers.ResponseContentType;
 import bzh.duncan.http.response.headers.ResponseHeaders;
@@ -16,20 +18,28 @@ public class HandleFile {
 
     public static HttpResponse handleGet(HttpRequest request) {
         String[] pathParts = request.getPath().split("/");
-        if (pathParts.length > 2){
+        if (pathParts.length > 2) {
             String searchedFile = pathParts[2];
             try {
                 File file = new File("tmp/" + searchedFile);
-                if (file.exists()){
+                if (file.exists()) {
                     StatusLine statusLine = new StatusLine("HTTP/1.1", 200, "OK");
+
                     ResponseHeaders responseHeaders = new ResponseHeaders(
                             new ResponseContentType("application/octet-stream"),
                             new ResponseContentLength(file.length())
                     );
+
+                    if (Constants.containsGzip.test(request.getHeader("Accept-Encoding"))) {
+                        responseHeaders = new ResponseHeaders(
+                                new ResponseContentType("application/octet-stream"),
+                                new ResponseContentLength(file.length()),
+                                new ResponseContentEncoding("gzip")
+                        );
+                    }
                     ResponseBody responseBody = new ResponseBody(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
                     return new HttpResponse(statusLine, responseHeaders, responseBody);
-                }
-                else {
+                } else {
                     StatusLine statusLine = new StatusLine("HTTP/1.1", 404, "NOT FOUND");
                     return new HttpResponse(statusLine, new ResponseHeaders());
                 }
@@ -43,20 +53,19 @@ public class HandleFile {
 
     public static HttpResponse handlePost(HttpRequest request) {
         String[] pathParts = request.getPath().split("/");
-        if (pathParts.length > 2){
+        if (pathParts.length > 2) {
             String fileToCreate = pathParts[2];
             try {
                 File file = new File("tmp/" + fileToCreate);
-                if (!file.exists()){
-                    if(file.createNewFile()){
+                if (!file.exists()) {
+                    if (file.createNewFile()) {
                         String content = request.getBody();
                         if (content != null && !content.isEmpty()) {
                             FileUtils.writeStringToFile(file, content, StandardCharsets.UTF_8);
                         }
                         return new HttpResponse(new StatusLine("HTTP/1.1", 201, "CREATED"));
 
-                    }
-                    else{
+                    } else {
 
                         return new HttpResponse(
                                 new StatusLine("HTTP/1.1", 500, "INTERNAL SERVER ERROR")
@@ -64,8 +73,7 @@ public class HandleFile {
 
                     }
 
-                }
-                else {
+                } else {
                     StatusLine statusLine = new StatusLine("HTTP/1.1", 409, "CONFLICT");
                     return new HttpResponse(statusLine);
                 }
