@@ -24,6 +24,7 @@ public class HandleFile {
                 File file = new File("tmp/" + searchedFile);
                 if (file.exists()) {
                     StatusLine statusLine = new StatusLine("HTTP/1.1", 200, "OK");
+                    ResponseBody responseBody = new ResponseBody(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
 
                     ResponseHeaders responseHeaders = new ResponseHeaders(
                             new ResponseContentType("application/octet-stream"),
@@ -36,8 +37,8 @@ public class HandleFile {
                                 new ResponseContentLength(file.length()),
                                 new ResponseContentEncoding("gzip")
                         );
+                        responseBody = new ResponseBody(FileUtils.readFileToByteArray(file));
                     }
-                    ResponseBody responseBody = new ResponseBody(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
                     return new HttpResponse(statusLine, responseHeaders, responseBody);
                 } else {
                     StatusLine statusLine = new StatusLine("HTTP/1.1", 404, "NOT FOUND");

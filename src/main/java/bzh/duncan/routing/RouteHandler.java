@@ -10,6 +10,7 @@ import bzh.duncan.http.response.headers.ResponseContentType;
 import bzh.duncan.http.response.headers.ResponseHeaders;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public class RouteHandler {
         routes.put(new RouteKey(HttpMethodEnum.POST, "files"), HandleFile::handlePost);
     }
 
-    public HttpResponse handleRequest(HttpRequest request) {
+    public HttpResponse handleRequest(HttpRequest request) throws IOException {
         String path = request.getPath();
 
         if (StringUtils.equals("/", path)) {

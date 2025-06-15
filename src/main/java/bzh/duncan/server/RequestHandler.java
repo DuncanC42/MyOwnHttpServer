@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class RequestHandler implements Runnable {
 
@@ -35,8 +36,9 @@ public class RequestHandler implements Runnable {
 
             HttpResponse httpResponse = routeHandler.handleRequest(httpRequest);
 
+            byte[] responseBytes = httpResponse.toByteArray();
             OutputStream outputStream = clientSocket.getOutputStream();
-            outputStream.write(httpResponse.toString().getBytes());
+            outputStream.write(responseBytes);
             outputStream.flush();
 
         } catch (IOException e) {
@@ -45,7 +47,7 @@ public class RequestHandler implements Runnable {
             try {
                 OutputStream outputStream = clientSocket.getOutputStream();
                 String errorResponse = "HTTP/1.1 500 Internal Server Error\r\n\r\n";
-                outputStream.write(errorResponse.getBytes());
+                outputStream.write(errorResponse.getBytes(StandardCharsets.UTF_8));
                 outputStream.flush();
             } catch (IOException ex) {
                 System.out.println("Error sending error response: " + ex.getMessage());
